@@ -15,7 +15,6 @@
 #include "binarynewickvector.h"
 #include "newick.h"
 #include "fileio.h"
-#include "richelbilderbeekprogram.h"
 #include "newickvector.h"
 #include "testnewickvectordialog.h"
 #include "testtimer.h"
@@ -46,7 +45,7 @@ ribi::About ribi::TestNewickVectorMenuDialog::GetAbout() const noexcept
     "Richel Bilderbeek",
     "TestNewickVector",
     "tool to test the NewickVector class",
-    "at the 25th of April 2011",
+    "December 9th of 2015",
     "2011-2015",
     "http://www.richelbilderbeek.nl/ToolTestNewickVector.htm",
     GetVersion(),
@@ -59,7 +58,7 @@ ribi::About ribi::TestNewickVectorMenuDialog::GetAbout() const noexcept
 
 std::string ribi::TestNewickVectorMenuDialog::GetVersion() const noexcept
 {
-  return "3.2";
+  return "4.0";
 }
 
 std::vector<std::string> ribi::TestNewickVectorMenuDialog::GetVersionHistory() const noexcept
@@ -70,7 +69,8 @@ std::vector<std::string> ribi::TestNewickVectorMenuDialog::GetVersionHistory() c
     "2011-03-26: Version 3.0: seperated GUI from logic, added web version",
     "2011-04-25: Version 3.1: removed web version\'s Close button",
     "2011-06-07: Version 3.2: added command-line call",
-    "2015-06-14: Version 3.3: created menu dialog for conforming to ProjectRichelBilderbeek"
+    "2015-06-14: Version 3.3: created menu dialog for conforming to ProjectRichelBilderbeek",
+    "2015-12-09: Version 4.0: moved to own GitHub",
   };
 }
 
@@ -85,13 +85,6 @@ ribi::Help ribi::TestNewickVectorMenuDialog::GetHelp() const noexcept
     {
     }
   );
-}
-
-boost::shared_ptr<const ribi::Program> ribi::TestNewickVectorMenuDialog::GetProgram() const noexcept
-{
-  const boost::shared_ptr<const ribi::Program> p(new ProgramTestNewickVector);
-  assert(p);
-  return p;
 }
 
 #ifndef NDEBUG

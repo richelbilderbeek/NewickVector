@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     return 1;
   }
   const std::string newick = argv[1];
-  if (!ribi::Newick::IsNewick(newick))
+  if (!ribi::Newick().IsNewick(newick))
   {
     std::cout
       << "Invalid Newick format. Use for example:\n"
