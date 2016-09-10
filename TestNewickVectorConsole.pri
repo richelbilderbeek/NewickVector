@@ -2,9 +2,9 @@ INCLUDEPATH += \
     ../TestNewickVector
 
 SOURCES += \
-    ../TestNewickVector/testnewickvectormenudialog.cpp \
-    ../TestNewickVector/testnewickvectordialog.cpp
+    $$PWD/testnewickvectormenudialog.cpp \
+    $$PWD/testnewickvectordialog.cpp
 
 HEADERS += \
-    ../TestNewickVector/testnewickvectormenudialog.h \
-    ../TestNewickVector/testnewickvectordialog.h
+    $$PWD/testnewickvectormenudialog.h \
+    $$PWD/testnewickvectordialog.h

@@ -1,13 +1,13 @@
-include(../TestNewickVector/TestNewickVectorConsole.pri)
+include(TestNewickVectorConsole.pri)
 
 RESOURCES += \
-    ../TestNewickVector/TestNewickVector.qrc
+    $$PWD/TestNewickVector.qrc
 
 FORMS += \
-    ../TestNewickVector/qttestnewickvectordialog.ui
+    $$PWD/qttestnewickvectordialog.ui
 
 SOURCES += \
-    ../TestNewickVector/qttestnewickvectordialog.cpp
+    $$PWD/qttestnewickvectordialog.cpp
 
 HEADERS += \
-    ../TestNewickVector/qttestnewickvectordialog.h
+    $$PWD/qttestnewickvectordialog.h
