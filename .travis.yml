@@ -24,7 +24,6 @@ addons:
     - libboost1.55-all-dev
 
 before_script: 
-  - ./download_other_githubs.sh
   - ./install_other_githubs.sh
 
 script: 

@@ -43,8 +43,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "fuzzy_equal_to.h"
 #include "newick.h"
-#include "testtimer.h"
-#include "trace.h"
 
 #pragma GCC diagnostic pop
 
@@ -438,10 +436,6 @@ void ribi::NewickVector::Test() noexcept
     if (is_tested) return;
     is_tested = true;
   }
-  {
-    Newick();
-  }
-  const TestTimer test_timer(__func__,__FILE__,1.0);
   const bool verbose{false};
 
   //Test simplification of trinary Newick
