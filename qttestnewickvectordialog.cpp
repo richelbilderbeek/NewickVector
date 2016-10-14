@@ -29,8 +29,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include <string>
 
-
-
 #include <QTimer>
 
 #include "BigIntegerLibrary.hh"
@@ -40,7 +38,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #include "testnewickvectordialog.h"
 #include "testnewickvectormenudialog.h"
 #include "newick.h"
-#include "testtimer.h"
 #include "newickvector.h"
 #include "qtaboutdialog.h"
 #include "ui_qttestnewickvectordialog.h"
@@ -52,9 +49,6 @@ ribi::QtTestNewickVectorDialog::QtTestNewickVectorDialog(QWidget *parent) noexce
     m_timer(new QTimer),
     m_dialog(new TestNewickVectorDialog)
 {
-  #ifndef NDEBUG
-  Test();
-  #endif
   ui->setupUi(this);
   QObject::connect(
     ui->edit_newick,static_cast<void (QLineEdit::*)(const QString&)>(&QLineEdit::textChanged),
@@ -175,19 +169,3 @@ void ribi::QtTestNewickVectorDialog::on_box_compare_clicked() noexcept
 {
   m_dialog->SetCompareToTwoDigitNewick(ui->box_compare->isChecked());
 }
-
-#ifndef NDEBUG
-void ribi::QtTestNewickVectorDialog::Test() noexcept
-{
-  {
-    static bool is_tested{false};
-    if (is_tested) return;
-    is_tested = true;
-  }
-  {
-    TestNewickVectorDialog();
-    TestNewickVectorMenuDialog();
-  }
-  const TestTimer test_timer(__func__,__FILE__,1.0);
-}
-#endif
