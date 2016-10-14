@@ -8,33 +8,21 @@ h_files=`ls *.h | egrep -v "^ui_.*\.h$"`
   $cpp_files \
   $h_files \
   -- \
-  -c -std=c++11 -fPIC \
+  -c -std=c++14 -fPIC \
+  -I../RibiClasses/BinaryNewickVector \
   -I../RibiClasses/CppAbout \
-  -I../ConceptMap \
   -I../RibiClasses/CppContainer \
   -I../RibiClasses/CppCounter \
   -I../RibiClasses/CppFuzzy_equal_to \
   -I../RibiClasses/CppGeometry \
   -I../RibiClasses/CppHelp \
-  -I../RibiClasses/CppTestTimer \
   -I../RibiClasses/CppFileIo \
   -I../RibiClasses/CppMenuDialog \
   -I../RibiClasses/CppPlane \
-  -I../RibiClasses/CppQtAboutDialog \
-  -I../RibiClasses/CppQtArrowItem \
-  -I../QtConceptMap \
-  -I../RibiClasses/CppQtHideAndShowDialog \
-  -I../RibiClasses/CppQtKeyboardFriendlyGraphicsView \
-  -I../RibiClasses/CppQtQuadBezierArrowItem \
-  -I../RibiClasses/CppQtRoundedEditRectItem \
-  -I../RibiClasses/CppQtRoundedRectItem \
-  -I../RibiClasses/CppQtScopedDisable \
-  -I../RibiClasses/CppRibiRegex \
-  -I../RibiClasses/CppTrace \
-  -I../RibiClasses/CppXml \
-  -I../BoostGraphTutorial/BoostGraphTutorial \
-  -I../StyleSheetSetter \
+  -I../RibiClasses/Newick \
+  -I../RibiClasses/NewickVector \
   -I../RibiLibraries/Apfloat \
+  -I../RibiLibraries/bigint-2010.04.30 \
   -I/usr/include/c++/5 \
   -I/usr/include/x86_64-linux-gnu/c++/5 \
   -I/usr/include/qt4 \
