@@ -27,8 +27,11 @@ before_script:
   - ./install_other_githubs.sh
 
 script: 
-  - ./build_console.sh
-  - ./build_desktop.sh
+  - qmake TestNewickVectorConsole.pro
+  - make
+  - ./TestNewickVectorConsole (2,(2,2)) 2.5
+  - qmake TestNewickVectorDesktop.pro
+  - make
   - ./get_code_cov.sh
   - codecov
   - ./do_oclint.sh

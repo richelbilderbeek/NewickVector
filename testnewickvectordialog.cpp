@@ -53,9 +53,7 @@ ribi::TestNewickVectorDialog::TestNewickVectorDialog() noexcept
     m_n_symmetries{},
     m_text{}
 {
-  #ifndef NDEBUG
-  Test();
-  #endif
+
 }
 
 void ribi::TestNewickVectorDialog::Analyse() noexcept
@@ -421,19 +419,3 @@ void ribi::TestNewickVectorDialog::SetTheta(const std::string& s)
   m_theta_str = s;
 }
 
-#ifndef NDEBUG
-void ribi::TestNewickVectorDialog::Test() noexcept
-{
-  {
-    static bool is_tested{false};
-    if (is_tested) return;
-    is_tested = true;
-  }
-  {
-    fileio::FileIo();
-    Newick().Test();
-    BinaryNewickVector::Test();
-  }
-  const TestTimer test_timer(__func__,__FILE__,1.0);
-}
-#endif

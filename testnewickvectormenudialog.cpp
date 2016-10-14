@@ -23,9 +23,7 @@
 
 ribi::TestNewickVectorMenuDialog::TestNewickVectorMenuDialog()
 {
-  #ifndef NDEBUG
-  Test();
-  #endif
+
 }
 
 int ribi::TestNewickVectorMenuDialog::ExecuteSpecific(const std::vector<std::string>& argv) noexcept
@@ -86,21 +84,3 @@ ribi::Help ribi::TestNewickVectorMenuDialog::GetHelp() const noexcept
     }
   );
 }
-
-#ifndef NDEBUG
-void ribi::TestNewickVectorMenuDialog::Test() noexcept
-{
-  {
-    static bool is_tested{false};
-    if (is_tested) return;
-    is_tested = true;
-  }
-  {
-    fileio::FileIo();
-    Newick().Test();
-    BinaryNewickVector::Test();
-    TestNewickVectorDialog();
-  }
-  const TestTimer test_timer(__func__,__FILE__,1.0);
-}
-#endif

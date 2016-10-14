@@ -70,10 +70,6 @@ struct TestNewickVectorDialog
 
   ///Check if theta is valid
   bool CheckTheta() noexcept;
-
-  #ifndef NDEBUG
-  static void Test() noexcept;
-  #endif
 };
 
 } //~namespace ribi
