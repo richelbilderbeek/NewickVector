@@ -21,9 +21,10 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #ifndef QTTESTNEWICKVECTORDIALOG_H
 #define QTTESTNEWICKVECTORDIALOG_H
 
+#include <memory>
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Weffc++"
-#include <boost/scoped_ptr.hpp>
 #include "qthideandshowdialog.h"
 #pragma GCC diagnostic pop
 
@@ -46,13 +47,11 @@ public:
   QtTestNewickVectorDialog(const QtTestNewickVectorDialog&) = delete;
   QtTestNewickVectorDialog& operator=(const QtTestNewickVectorDialog&) = delete;
   ~QtTestNewickVectorDialog() noexcept;
-  static std::string GetVersion() noexcept;
-  static std::vector<std::string> GetVersionHistory() noexcept;
 
 private:
   Ui::QtTestNewickVectorDialog *ui;
   QTimer * m_timer;
-  boost::scoped_ptr<TestNewickVectorDialog> m_dialog;
+  std::unique_ptr<TestNewickVectorDialog> m_dialog;
   void Display() noexcept;
 
 
