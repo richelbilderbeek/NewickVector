@@ -9,7 +9,7 @@ h_files=`ls *.h | egrep -v "^ui_.*\.h$"`
   $h_files \
   -- \
   -c -std=c++14 -fPIC \
-  -I../RibiClasses/BinaryNewickVector \
+  -I../BinaryNewickVector \
   -I../RibiClasses/CppAbout \
   -I../RibiClasses/CppContainer \
   -I../RibiClasses/CppCounter \
@@ -19,8 +19,9 @@ h_files=`ls *.h | egrep -v "^ui_.*\.h$"`
   -I../RibiClasses/CppFileIo \
   -I../RibiClasses/CppMenuDialog \
   -I../RibiClasses/CppPlane \
-  -I../RibiClasses/Newick \
-  -I../RibiClasses/NewickVector \
+  -I../RibiClasses/CppQtHideAndShowDialog \
+  -I../Newick \
+  -I../NewickVector \
   -I../RibiLibraries/Apfloat \
   -I../RibiLibraries/bigint-2010.04.30 \
   -I/usr/include/c++/5 \
