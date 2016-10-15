@@ -123,30 +123,9 @@ double ribi::CalculateProbabilityImpl(
     }
     //Complex
     //Generate other Newicks and their coefficients
-    std::vector<double> coefficients;
-    std::vector<NewickVector> newicks;
-    {
-      const double d = n.CalcDenominator(theta);
-      typedef std::pair<std::vector<int>,int> NewickFrequencyPair;
-      const std::vector<NewickFrequencyPair> newick_freqs
-        = Newick().GetSimplerNewicksFrequencyPairs(n.Peek());
-      for(const NewickFrequencyPair& p: newick_freqs)
-      {
-        const int frequency = p.second;
-        assert(frequency > 0);
-        if (frequency == 1)
-        {
-          newicks.push_back(p.first);
-          coefficients.push_back(theta / d);
-        }
-        else
-        {
-          const double f_d = static_cast<double>(frequency);
-          newicks.push_back(p.first);
-          coefficients.push_back( (f_d*(f_d-1.0)) / d);
-        }
-      }
-    }
+    const auto cnp = GetCoefficientNewickPairs(n, theta);
+    const std::vector<double>& coefficients = cnp.first;
+    const std::vector<NewickVector>& newicks = cnp.second;
     //Ask help about these new Newicks
     {
       const int sz = newicks.size();
@@ -195,6 +174,38 @@ int ribi::NewickVector::FindPosBefore(const std::vector<int>& v,const int x, con
     if (v[i]==x) return i;
   }
   return -1;
+}
+
+
+std::pair<std::vector<double>, std::vector<ribi::NewickVector>>
+ribi::GetCoefficientNewickPairs(
+  const NewickVector& n,
+  const double theta
+)
+{
+  std::vector<double> coefficients;
+  std::vector<NewickVector> newicks;
+  const double d = n.CalcDenominator(theta);
+  typedef std::pair<std::vector<int>,int> NewickFrequencyPair;
+  const std::vector<NewickFrequencyPair> newick_freqs
+    = Newick().GetSimplerNewicksFrequencyPairs(n.Peek());
+  for(const NewickFrequencyPair& p: newick_freqs)
+  {
+    const int frequency = p.second;
+    assert(frequency > 0);
+    if (frequency == 1)
+    {
+      newicks.push_back(p.first);
+      coefficients.push_back(theta / d);
+    }
+    else
+    {
+      const double f_d = static_cast<double>(frequency);
+      newicks.push_back(p.first);
+      coefficients.push_back( (f_d*(f_d-1.0)) / d);
+    }
+  }
+  return std::make_pair(coefficients, newicks);
 }
 
 std::vector<ribi::NewickVector> ribi::NewickVector::GetSimplerNewicks() const
@@ -371,45 +382,38 @@ ribi::NewickVector ribi::NewickVector::TermIsNotOne(const int i) const
 //      ^      EXIT-2
 // (1,(1,1)), string_pos 7 -> (1,2)
 //        ^    EXIT-1
-// ((1,2,3),3), string_pos 3 -> (3,3) //Might be incorrect: algorithm holds for two numbers between brackets
+// ((1,2,3),3), string_pos 3 -> (3,3) //Might be incorrect: algorithm holds for two numbers between brackets //!OCLINT comment just goes best as such
 //    ^
 ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
 {
   const int sz = m_v.size();
-
-  //assert(new_newick.empty());
   assert(i < sz);
+  assert(!m_v.empty());
   assert(m_v[i] == 1); //Must be a 1
 
-  const bool open_bracket_left
-    = IsOpenBracketLeft(i);
-  const bool close_bracket_right
-    = IsCloseBracketRight(i);
-
-  if (open_bracket_left == true
-    && close_bracket_right == true)
+  if (!IsOpenBracketLeft(i) || !IsCloseBracketRight(i))
   {
-    //Find other_value
-    int other_value = 0;
-    //If adjecent to the left is a comma
-    // and subsequently a value,
-    if (i > 0
-      && m_v[i-1]  > 0)
-    {
-      other_value = m_v[i-1];
-    }
-    else if (i + 1 < sz
-      && m_v[i+1]  > 0)
-    {
-      other_value = m_v[i+1];
-    }
-
-    assert(other_value >= 1);
-    return LoseBrackets(other_value,i);
+    //Return an empty SortedNewickVector
+    return NewickVector(std::vector<int>());
+  }
+  assert(IsOpenBracketLeft(i) && IsCloseBracketRight(i));
+  //Find other_value
+  int other_value = 0;
+  //If adjecent to the left is a comma
+  // and subsequently a value,
+  if (i > 0
+    && m_v[i-1]  > 0)
+  {
+    other_value = m_v[i-1];
+  }
+  else if (i + 1 < sz
+    && m_v[i+1]  > 0)
+  {
+    other_value = m_v[i+1];
   }
 
-  //Return an empty SortedNewickVector
-  return NewickVector(std::vector<int>());
+  assert(other_value >= 1);
+  return LoseBrackets(other_value,i);
 }
 
 std::string ribi::NewickVector::ToStr() const

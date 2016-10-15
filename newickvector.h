@@ -80,6 +80,12 @@ double CalculateProbabilityImpl(
   NewickStorage<NewickVector>& storage
 );
 
+std::pair<std::vector<double>, std::vector<ribi::NewickVector>>
+GetCoefficientNewickPairs(
+  const NewickVector& n,
+  const double theta
+);
+
 std::string GetNewickVectorVersion() noexcept;
 std::vector<std::string> GetNewickVectorVersionHistory() noexcept;
 
