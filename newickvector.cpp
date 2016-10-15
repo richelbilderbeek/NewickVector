@@ -60,7 +60,7 @@ ribi::NewickVector::NewickVector(const std::vector<int>& v)
   assert(m_v.empty() || Newick().IsNewick(m_v));
 }
 
-const BigInteger ribi::NewickVector::CalcComplexity() const
+BigInteger ribi::NewickVector::CalcComplexity() const
 {
   return Newick().CalcComplexity(m_v);
 }
@@ -70,20 +70,20 @@ double ribi::NewickVector::CalcDenominator(const double theta) const
   return Newick().CalcDenominator(Peek(),theta);
 }
 
-const BigInteger ribi::NewickVector::CalcNumOfCombinations() const
+BigInteger ribi::NewickVector::CalcNumOfCombinations() const
 {
   assert(Newick().IsNewick(m_v));
   return Newick().CalcNumOfCombinationsBinary(m_v);
 }
 
-const BigInteger ribi::NewickVector::CalcNumOfSymmetries() const
+BigInteger ribi::NewickVector::CalcNumOfSymmetries() const
 {
   assert(Newick().IsNewick(m_v));
   assert(Newick().IsBinaryNewick(m_v));
   return Newick().CalcNumOfSymmetriesBinary(m_v);
 }
 
-double ribi::NewickVector::CalculateProbability(
+double ribi::CalculateProbabilityNewickVector(
   const std::string& newick_str,
   const double theta)
 {
@@ -91,13 +91,14 @@ double ribi::NewickVector::CalculateProbability(
   assert(theta > 0.0);
   NewickVector newick(newick_str);
   NewickStorage<NewickVector> storage(newick);
-  return CalculateProbabilityInternal(
+  return CalculateProbabilityImpl(
     newick,
     theta,
-    storage);
+    storage
+  );
 }
 
-double ribi::NewickVector::CalculateProbabilityInternal(
+double ribi::CalculateProbabilityImpl(
   const NewickVector& n,
   const double theta,
   NewickStorage<NewickVector>& storage)
@@ -126,12 +127,6 @@ double ribi::NewickVector::CalculateProbabilityInternal(
     std::vector<NewickVector> newicks;
     {
       const double d = n.CalcDenominator(theta);
-      #ifdef DEBUG_NEWICKVECTOR_CALCULATEPROBABILITYINTERNAL
-      TRACE("Denominator for "
-        + n.ToStr()
-        + " = "
-        + boost::lexical_cast<std::string>(d));
-      #endif
       typedef std::pair<std::vector<int>,int> NewickFrequencyPair;
       const std::vector<NewickFrequencyPair> newick_freqs
         = Newick().GetSimplerNewicksFrequencyPairs(n.Peek());
@@ -150,12 +145,6 @@ double ribi::NewickVector::CalculateProbabilityInternal(
           newicks.push_back(p.first);
           coefficients.push_back( (f_d*(f_d-1.0)) / d);
         }
-        #ifdef DEBUG_NEWICKVECTOR_CALCULATEPROBABILITYINTERNAL
-        TRACE("NewickVector "
-          + Newick::NewickToString(p.first)
-          + " has coefficient "
-          + boost::lexical_cast<std::string>(coefficients.back()));
-        #endif
       }
     }
     //Ask help about these new Newicks
@@ -166,7 +155,7 @@ double ribi::NewickVector::CalculateProbabilityInternal(
       for (int i=0; i!=sz; ++i)
       {
         //Recursive function call
-        p+=(coefficients[i] * CalculateProbabilityInternal(newicks[i],theta,storage));
+        p+=(coefficients[i] * CalculateProbabilityImpl(newicks[i],theta,storage));
       }
       storage.Store(n,p);
       return p;
@@ -208,7 +197,7 @@ int ribi::NewickVector::FindPosBefore(const std::vector<int>& v,const int x, con
   return -1;
 }
 
-const std::vector<ribi::NewickVector> ribi::NewickVector::GetSimplerNewicks() const
+std::vector<ribi::NewickVector> ribi::NewickVector::GetSimplerNewicks() const
 {
   assert(Newick().IsNewick(m_v));
   const std::vector<std::vector<int> > v
@@ -217,7 +206,7 @@ const std::vector<ribi::NewickVector> ribi::NewickVector::GetSimplerNewicks() co
   return w;
 }
 
-const std::pair<ribi::NewickVector,ribi::NewickVector> ribi::NewickVector::GetRootBranches() const
+std::pair<ribi::NewickVector,ribi::NewickVector> ribi::NewickVector::GetRootBranches() const
 {
   assert(Newick().IsNewick(m_v));
   std::pair<std::vector<int>,std::vector<int> > p
@@ -225,12 +214,12 @@ const std::pair<ribi::NewickVector,ribi::NewickVector> ribi::NewickVector::GetRo
   return p;
 }
 
-std::string ribi::NewickVector::GetVersion() noexcept
+std::string ribi::GetNewickVectorVersion() noexcept
 {
   return "2.1";
 }
 
-std::vector<std::string> ribi::NewickVector::GetVersionHistory() noexcept
+std::vector<std::string> ribi::GetNewickVectorVersionHistory() noexcept
 {
   return {
     "2009-06-01: Version 1.0: Initial version",
@@ -297,7 +286,7 @@ bool ribi::NewickVector::IsSimple() const
 // -> bracket_close_pos = 7
 // -> sz_loss = 4 = 7 - 3 = bracket_close_pos - bracket_open_pos
 // -> new_sz = 5
-const ribi::NewickVector ribi::NewickVector::LoseBrackets(const int x, const int i) const
+ribi::NewickVector ribi::NewickVector::LoseBrackets(const int x, const int i) const
 {
   assert(i >= 0);
   assert(i < Size());
@@ -323,9 +312,10 @@ const ribi::NewickVector ribi::NewickVector::LoseBrackets(const int x, const int
   return NewickVector(v_copy);
 }
 
-bool ribi::NewickVector::NewickCompare(
+bool ribi::NewickVectorCompare(
   const std::vector<int>& lhs,
-  const std::vector<int>& rhs) noexcept
+  const std::vector<int>& rhs
+) noexcept
 {
   const int l_sz = lhs.size();
   const int r_sz = rhs.size();
@@ -352,7 +342,7 @@ int ribi::NewickVector::Size() const noexcept
   return boost::numeric_cast<int>(m_v.size());
 }
 
-const ribi::NewickVector ribi::NewickVector::TermIsNotOne(const int i) const
+ribi::NewickVector ribi::NewickVector::TermIsNotOne(const int i) const
 {
   assert(m_v[i]>1);
   std::vector<int> v(m_v);
@@ -383,7 +373,7 @@ const ribi::NewickVector ribi::NewickVector::TermIsNotOne(const int i) const
 //        ^    EXIT-1
 // ((1,2,3),3), string_pos 3 -> (3,3) //Might be incorrect: algorithm holds for two numbers between brackets
 //    ^
-const ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
+ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
 {
   const int sz = m_v.size();
 
@@ -428,7 +418,7 @@ std::string ribi::NewickVector::ToStr() const
   return Newick().NewickToString(m_v);
 }
 
-bool ribi::operator<(const NewickVector& lhs, const NewickVector& rhs)
+bool ribi::operator<(const NewickVector& lhs, const NewickVector& rhs) noexcept
 {
-  return ribi::NewickVector::NewickCompare(lhs.Peek(),rhs.Peek());
+  return ribi::NewickVectorCompare(lhs.Peek(),rhs.Peek());
 }

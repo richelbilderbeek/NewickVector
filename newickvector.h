@@ -40,22 +40,20 @@ struct NewickVector
   NewickVector(const std::string& s);
   NewickVector(const std::vector<int>& v);
 
-  const BigInteger CalcComplexity() const;
+  BigInteger CalcComplexity() const;
   double CalcDenominator(const double theta) const;
-  const BigInteger CalcNumOfCombinations() const;
-  const BigInteger CalcNumOfSymmetries() const;
+  BigInteger CalcNumOfCombinations() const;
+  BigInteger CalcNumOfSymmetries() const;
   double CalcProbabilitySimpleNewick(const double theta) const;
   bool Empty() const noexcept { return m_v.empty(); }
   const std::vector<int>& Peek() const noexcept { return m_v; }
-  const std::vector<NewickVector> GetSimplerNewicks() const;
-  const std::pair<NewickVector,NewickVector> GetRootBranches() const;
+  std::vector<NewickVector> GetSimplerNewicks() const;
+  std::pair<NewickVector,NewickVector> GetRootBranches() const;
   bool IsSimple() const;
   std::string ToStr() const;
-  static std::string GetVersion() noexcept;
-  static std::vector<std::string> GetVersionHistory() noexcept;
   int Size() const noexcept;
-  const NewickVector TermIsNotOne(const int i) const;
-  const NewickVector TermIsOne(const int i) const;
+  NewickVector TermIsNotOne(const int i) const;
+  NewickVector TermIsOne(const int i) const;
 
 
   private:
@@ -65,29 +63,33 @@ struct NewickVector
   int FindPosBefore(const std::vector<int>& v,const int x, const int index) const;
   bool IsCloseBracketRight(const int pos) const;
   bool IsOpenBracketLeft(const int pos) const;
-  const NewickVector LoseBrackets(const int x, const int i) const;
-
-  static double CalculateProbabilityInternal(
-    const NewickVector& n,
-    const double theta,
-    NewickStorage<NewickVector>& storage);
-
-
-  public:
-
-  static double CalculateProbability(
-    const std::string& newick_str,
-    const double theta);
-
-
-  static bool NewickCompare(
-    const std::vector<int>& lhs,
-    const std::vector<int>& rhs) noexcept;
+  NewickVector LoseBrackets(const int x, const int i) const;
 };
 
-bool operator<(
-  const NewickVector& lhs,
-  const NewickVector& rhs);
+///Calculate the probablity using a NewickVector as the workhorse
+double CalculateProbabilityNewickVector(
+  const std::string& newick_str,
+  const double theta
+);
+
+///Calculate the probability of a NewickVector
+///Prefer calling NewickVector::CalculateProbability
+double CalculateProbabilityImpl(
+  const NewickVector& n,
+  const double theta,
+  NewickStorage<NewickVector>& storage
+);
+
+std::string GetNewickVectorVersion() noexcept;
+std::vector<std::string> GetNewickVectorVersionHistory() noexcept;
+
+///Compare two NewickVector implementation
+bool NewickVectorCompare(
+  const std::vector<int>& lhs,
+  const std::vector<int>& rhs
+) noexcept;
+
+bool operator<(const NewickVector& lhs, const NewickVector& rhs) noexcept;
 
 } //~namespace ribi
 

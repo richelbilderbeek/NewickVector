@@ -29,7 +29,7 @@ before_script:
 script: 
   - qmake TestNewickVectorConsole.pro
   - make
-  - ./TestNewickVectorConsole (2,(2,2)) 2.5
+  - ./TestNewickVectorConsole "(2,(2,2))" 2.5
   - qmake TestNewickVectorDesktop.pro
   - make
   - ./get_code_cov.sh

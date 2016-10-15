@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
   }
   const double theta = boost::lexical_cast<double>(argv[2]);
-  const double p = ribi::NewickVector::CalculateProbability(newick,theta);
+  const double p = ribi::CalculateProbabilityNewickVector(newick,theta);
   std::cout << std::setprecision(99) << p << '\n';
   return 0; //To satisfy the compiler
 }

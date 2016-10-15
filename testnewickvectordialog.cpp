@@ -143,7 +143,7 @@ void ribi::TestNewickVectorDialog::AnalyseCalculation() noexcept
   for(const NewickFrequencyPair& p: simpler)
   {
     const NewickVector n(p.first);
-    probabilities.push_back(n.CalculateProbability(n.ToStr(),m_theta));
+    probabilities.push_back(CalculateProbabilityNewickVector(n.ToStr(),m_theta));
   }
   assert(probabilities.size() == simpler.size());
 
@@ -233,7 +233,7 @@ void ribi::TestNewickVectorDialog::AnalyseCalculation() noexcept
       + boost::lexical_cast<std::string>(p_by_hand)
       + " (hand-calculated)"
     );
-    const double p_at_once = m_newick->CalculateProbability(m_newick->ToStr(),m_theta);
+    const double p_at_once = CalculateProbabilityNewickVector(m_newick->ToStr(),m_theta);
     m_text.push_back(
       std::string(ribi::fuzzy_equal_to()(p_by_hand,p_at_once)
         ? "       = "

@@ -50,7 +50,7 @@ ribi::About ribi::TestNewickVectorMenuDialog::GetAbout() const noexcept
     GetVersionHistory());
   about.AddLibrary("BigInt: version 2010.04.30");
   about.AddLibrary("BinaryNewickVector: " + BinaryNewickVector::GetVersion());
-  about.AddLibrary("NewickVector: " + NewickVector::GetVersion());
+  about.AddLibrary("NewickVector: " + GetNewickVectorVersion());
   return about;
 }
 

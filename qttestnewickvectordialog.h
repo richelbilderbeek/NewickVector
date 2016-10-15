@@ -39,7 +39,7 @@ struct TestNewickVectorDialog;
 
 class QtTestNewickVectorDialog : public QtHideAndShowDialog
 {
-  Q_OBJECT
+  Q_OBJECT //!OCLINT
 
 public:
   ///QtTestNewickVectorDialog constructor performs most Newick tests
