@@ -32,6 +32,8 @@ struct NewickVector;
 
 struct TestNewickVectorDialog
 {
+  typedef std::pair<std::vector<int>,int> NewickFrequencyPair;
+
   TestNewickVectorDialog() noexcept;
   void AutoCalculate() noexcept;
   void Calculate() noexcept;
@@ -60,6 +62,21 @@ struct TestNewickVectorDialog
 
   std::vector<std::string> m_text;
 
+  void AddCoefficients(
+    std::vector<std::string>& v,
+    const std::vector<NewickFrequencyPair>& simpler,
+    const std::vector<double>& probabilities,
+    const std::vector<double>& coefficients
+  ) const noexcept;
+
+  void AddDerivedNewicks(
+    std::vector<std::string>& v,
+    const std::vector<NewickFrequencyPair>& simpler,
+    const std::vector<double>& probabilities
+  ) const noexcept;
+
+  void AddGeneralInfo(std::vector<std::string>& v) const noexcept;
+
   void Analyse() noexcept;
   void AnalyseArity() noexcept;
   void AnalyseCalculation() noexcept;
@@ -71,6 +88,8 @@ struct TestNewickVectorDialog
   ///Check if theta is valid
   bool CheckTheta() noexcept;
 };
+
+
 
 } //~namespace ribi
 
