@@ -19,6 +19,7 @@ h_files=`ls *.h | egrep -v "^ui_.*\.h$"`
   -I../RibiClasses/CppFileIo \
   -I../RibiClasses/CppMenuDialog \
   -I../RibiClasses/CppPlane \
+  -I../RibiClasses/CppQtAboutDialog \
   -I../RibiClasses/CppQtHideAndShowDialog \
   -I../Newick \
   -I../NewickVector \

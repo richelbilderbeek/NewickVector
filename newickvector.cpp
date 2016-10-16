@@ -382,8 +382,11 @@ ribi::NewickVector ribi::NewickVector::TermIsNotOne(const int i) const
 //      ^      EXIT-2
 // (1,(1,1)), string_pos 7 -> (1,2)
 //        ^    EXIT-1
-// ((1,2,3),3), string_pos 3 -> (3,3) //Might be incorrect: algorithm holds for two numbers between brackets //!OCLINT comment just goes best as such
+// ((1,2,3),3), string_pos 3 -> (3,3)   [*1]
 //    ^
+//
+// Notes:
+// [*1]: Might be incorrect: algorithm holds for two numbers between brackets
 ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
 {
   const int sz = m_v.size();
@@ -396,18 +399,15 @@ ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
     //Return an empty SortedNewickVector
     return NewickVector(std::vector<int>());
   }
-  assert(IsOpenBracketLeft(i) && IsCloseBracketRight(i));
   //Find other_value
   int other_value = 0;
   //If adjecent to the left is a comma
   // and subsequently a value,
-  if (i > 0
-    && m_v[i-1]  > 0)
+  if (i > 0  && m_v[i-1]  > 0)
   {
     other_value = m_v[i-1];
   }
-  else if (i + 1 < sz
-    && m_v[i+1]  > 0)
+  else if (i + 1 < sz && m_v[i+1] > 0)
   {
     other_value = m_v[i+1];
   }

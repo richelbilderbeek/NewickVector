@@ -31,7 +31,6 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 
 #include "fileio.h"
 #include "binarynewickvector.h"
-#include "testtimer.h"
 #include "fuzzy_equal_to.h"
 #include "newick.h"
 #include "newickvector.h"
@@ -245,7 +244,9 @@ void ribi::TestNewickVectorDialog::AnalyseCalculation() noexcept
       && (  Newick().IsUnaryNewick(m_newick->Peek())
          || Newick().IsBinaryNewick(m_newick->Peek()) ) )
     {
-      const double p_two_digit_newick = TwoDigitNewick::CalculateProbability(m_newick->ToStr(),m_theta);
+      const double p_two_digit_newick{
+        CalculateProbabilityTwoDigitNewick(m_newick->ToStr(),m_theta)
+      };
       m_text.push_back(
         std::string(ribi::fuzzy_equal_to()(p_two_digit_newick,p_at_once)
           ? "       = "

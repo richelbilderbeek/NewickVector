@@ -17,7 +17,6 @@
 #include "fileio.h"
 #include "newickvector.h"
 #include "testnewickvectordialog.h"
-#include "testtimer.h"
 #include "trace.h"
 #pragma GCC diagnostic pop
 
