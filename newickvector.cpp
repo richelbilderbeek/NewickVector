@@ -400,6 +400,19 @@ ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
     return NewickVector(std::vector<int>());
   }
   //Find other_value
+  const int other_value{
+    TermIsOneFindOtherValue(i)
+  };
+  assert(other_value >= 1);
+  return LoseBrackets(other_value,i);
+}
+
+int ribi::NewickVector::TermIsOneFindOtherValue(const int i) const
+{
+  const int sz{static_cast<int>(m_v.size())};
+  assert(i < sz);
+  assert(!m_v.empty());
+  assert(m_v[i] == 1); //Must be a 1
   int other_value = 0;
   //If adjecent to the left is a comma
   // and subsequently a value,
@@ -411,9 +424,7 @@ ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
   {
     other_value = m_v[i+1];
   }
-
-  assert(other_value >= 1);
-  return LoseBrackets(other_value,i);
+  return other_value;
 }
 
 std::string ribi::NewickVector::ToStr() const

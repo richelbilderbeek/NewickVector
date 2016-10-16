@@ -64,6 +64,7 @@ struct NewickVector
   bool IsCloseBracketRight(const int pos) const;
   bool IsOpenBracketLeft(const int pos) const;
   NewickVector LoseBrackets(const int x, const int i) const;
+  int TermIsOneFindOtherValue(const int i) const;
 };
 
 ///Calculate the probablity using a NewickVector as the workhorse
