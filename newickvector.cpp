@@ -47,7 +47,7 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 #pragma GCC diagnostic pop
 
 ribi::NewickVector::NewickVector(const std::string& s)
-  : m_v{Newick().StringToNewick(s)}
+  : m_v{newick::StringToNewick(s)}
 {
   assert(newick::IsNewick(s));
   //Can this be added?
@@ -62,25 +62,25 @@ ribi::NewickVector::NewickVector(const std::vector<int>& v)
 
 BigInteger ribi::NewickVector::CalcComplexity() const
 {
-  return Newick().CalcComplexity(m_v);
+  return newick::CalcComplexity(m_v);
 }
 
 double ribi::NewickVector::CalcDenominator(const double theta) const
 {
-  return Newick().CalcDenominator(Peek(),theta);
+  return newick::CalcDenominator(Peek(),theta);
 }
 
 BigInteger ribi::NewickVector::CalcNumOfCombinations() const
 {
   assert(newick::IsNewick(m_v));
-  return Newick().CalcNumOfCombinationsBinary(m_v);
+  return newick::CalcNumOfCombinationsBinary(m_v);
 }
 
 BigInteger ribi::NewickVector::CalcNumOfSymmetries() const
 {
   assert(newick::IsNewick(m_v));
-  assert(Newick().IsBinaryNewick(m_v));
-  return Newick().CalcNumOfSymmetriesBinary(m_v);
+  assert(newick::IsBinaryNewick(m_v));
+  return newick::CalcNumOfSymmetriesBinary(m_v);
 }
 
 double ribi::CalculateProbabilityNewickVector(
@@ -144,9 +144,9 @@ double ribi::CalculateProbabilityImpl(
 
 double ribi::NewickVector::CalcProbabilitySimpleNewick(const double theta) const
 {
-  assert(Newick().IsSimple(m_v));
+  assert(newick::IsSimple(m_v));
   assert(theta > 0.0);
-  return Newick().CalcProbabilitySimpleNewick(m_v,theta);
+  return newick::CalcProbabilitySimpleNewick(m_v,theta);
 }
 
 int ribi::NewickVector::FindPosAfter(const std::vector<int>& v,const int x, const int index) const
@@ -188,7 +188,7 @@ ribi::GetCoefficientNewickPairs(
   const double d = n.CalcDenominator(theta);
   typedef std::pair<std::vector<int>,int> NewickFrequencyPair;
   const std::vector<NewickFrequencyPair> newick_freqs
-    = Newick().GetSimplerNewicksFrequencyPairs(n.Peek());
+    = newick::GetSimplerNewicksFrequencyPairs(n.Peek());
   for(const NewickFrequencyPair& p: newick_freqs)
   {
     const int frequency = p.second;
@@ -212,7 +212,7 @@ std::vector<ribi::NewickVector> ribi::NewickVector::GetSimplerNewicks() const
 {
   assert(newick::IsNewick(m_v));
   const std::vector<std::vector<int> > v
-    = Newick().GetSimplerBinaryNewicks(m_v);
+    = newick::GetSimplerBinaryNewicks(m_v);
   std::vector<NewickVector> w(std::begin(v),std::end(v));
   return w;
 }
@@ -221,7 +221,7 @@ std::pair<ribi::NewickVector,ribi::NewickVector> ribi::NewickVector::GetRootBran
 {
   assert(newick::IsNewick(m_v));
   std::pair<std::vector<int>,std::vector<int> > p
-    = Newick().GetRootBranchesBinary(m_v);
+    = newick::GetRootBranchesBinary(m_v);
   return p;
 }
 
@@ -252,8 +252,8 @@ std::vector<std::string> ribi::GetNewickVectorVersionHistory() noexcept
   for (int i=pos+1; i!=sz; ++i) //+1 because v[pos]==1
   {
     const int x = m_v[i];
-    if (x == Newick::bracket_close) return true;
-    if (x == Newick::bracket_open) return false;
+    if (x == newick::bracket_close) return true;
+    if (x == newick::bracket_open) return false;
   }
   //There will always be a final closing bracket at the right
   // that is not stored in a SortedNewickVector's std::vector
@@ -269,8 +269,8 @@ bool ribi::NewickVector::IsOpenBracketLeft(const int pos) const
   for (int i=pos-1; i!=-1; --i) //-1, because v[pos]==1
   {
     const int x = m_v[i];
-    if (x == Newick::bracket_open) return true;
-    if (x == Newick::bracket_close) return false;
+    if (x == newick::bracket_open) return true;
+    if (x == newick::bracket_close) return false;
   }
   //There will always be a trailing opening bracket at the left
   // that is not stored in a SortedNewickVector's std::vector
@@ -279,7 +279,7 @@ bool ribi::NewickVector::IsOpenBracketLeft(const int pos) const
 
 bool ribi::NewickVector::IsSimple() const
 {
-  return Newick().IsSimple(m_v);
+  return newick::IsSimple(m_v);
 }
 
 //Does the following conversions:
@@ -306,10 +306,10 @@ ribi::NewickVector ribi::NewickVector::LoseBrackets(const int x, const int i) co
   std::vector<int> v_copy = m_v;
 
   const int bracket_open_pos
-    = FindPosBefore(m_v,Newick::bracket_open,i);
+    = FindPosBefore(m_v,newick::bracket_open,i);
   assert(bracket_open_pos > -1);
   const int bracket_close_pos
-    = FindPosAfter(m_v,Newick::bracket_close,i);
+    = FindPosAfter(m_v,newick::bracket_close,i);
   assert(bracket_close_pos < Size());
   const int sz = Size();
   const int sz_lose = bracket_close_pos - bracket_open_pos;
@@ -430,7 +430,7 @@ int ribi::NewickVector::TermIsOneFindOtherValue(const int i) const
 std::string ribi::NewickVector::ToStr() const
 {
   assert(newick::IsNewick(m_v));
-  return Newick().NewickToString(m_v);
+  return newick::NewickToString(m_v);
 }
 
 bool ribi::operator<(const NewickVector& lhs, const NewickVector& rhs) noexcept

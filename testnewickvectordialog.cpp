@@ -130,8 +130,8 @@ void ribi::TestNewickVectorDialog::AddCoefficients(
       + " (calculated at once by NewickVector)"
     );
     if (m_compare
-      && (  Newick().IsUnaryNewick(m_newick->Peek())
-         || Newick().IsBinaryNewick(m_newick->Peek()) ) )
+      && (  newick::IsUnaryNewick(m_newick->Peek())
+         || newick::IsBinaryNewick(m_newick->Peek()) ) )
     {
       const double p_two_digit_newick{
         CalculateProbabilityTwoDigitNewick(m_newick->ToStr(),m_theta)
@@ -161,7 +161,7 @@ void ribi::TestNewickVectorDialog::AddDerivedNewicks(
       "N'"
       + boost::lexical_cast<std::string>(i+1)
       + " = "
-      + Newick().NewickToString(simpler[i].first));
+      + newick::NewickToString(simpler[i].first));
   }
   v.push_back(" ");
   v.push_back("For t = "
@@ -215,7 +215,7 @@ void ribi::TestNewickVectorDialog::Analyse() noexcept
 
   AnalyseRootBranches();
 
-  if (Newick().IsBinaryNewick(m_newick->Peek()))
+  if (newick::IsBinaryNewick(m_newick->Peek()))
   {
     m_n_combinations = bigIntegerToString(m_newick->CalcNumOfCombinations());
     m_n_symmetries = bigIntegerToString(m_newick->CalcNumOfSymmetries());
@@ -233,7 +233,7 @@ void ribi::TestNewickVectorDialog::Analyse() noexcept
 void ribi::TestNewickVectorDialog::AnalyseArity() noexcept
 {
   //Check if simple Newick
-  if (Newick().IsSimple(m_newick->Peek()))
+  if (newick::IsSimple(m_newick->Peek()))
   {
     m_text.push_back("Simple Newick: Yes");
     m_text.push_back("Ewens probability: "
@@ -245,7 +245,7 @@ void ribi::TestNewickVectorDialog::AnalyseArity() noexcept
     m_text.push_back("Simple Newick: No");
   }
   //Check if binary Newick
-  if (Newick().IsBinaryNewick(m_newick->Peek()))
+  if (newick::IsBinaryNewick(m_newick->Peek()))
   {
     m_text.push_back("Binary Newick: Yes");
   }
@@ -253,7 +253,7 @@ void ribi::TestNewickVectorDialog::AnalyseArity() noexcept
   {
     m_text.push_back("Binary Newick: No");
   }
-  if (Newick().IsTrinaryNewick(m_newick->Peek()))
+  if (newick::IsTrinaryNewick(m_newick->Peek()))
   {
     m_text.push_back("Trinary Newick: Yes");
   }
@@ -269,7 +269,7 @@ void ribi::TestNewickVectorDialog::AnalyseCalculation() noexcept
 
   typedef std::pair<std::vector<int>,int> NewickFrequencyPair;
   const std::vector<NewickFrequencyPair> simpler
-    = Newick().GetSimplerNewicksFrequencyPairs(m_newick->Peek());
+    = newick::GetSimplerNewicksFrequencyPairs(m_newick->Peek());
   //Collect coeficients
   std::vector<double> coefficients;
   for(const NewickFrequencyPair& p: simpler)
@@ -301,17 +301,17 @@ void ribi::TestNewickVectorDialog::AnalyseCalculation() noexcept
 
 void ribi::TestNewickVectorDialog::AnalyseRootBranches() noexcept
 {
-  if(!Newick().IsUnaryNewick(m_newick->Peek()))
+  if(!newick::IsUnaryNewick(m_newick->Peek()))
   {
     std::string text = "(X,Y) =\n";
     const std::vector<std::vector<int> > b
-      = Newick().GetRootBranches(m_newick->Peek());
+      = newick::GetRootBranches(m_newick->Peek());
     try
     {
       for(const std::vector<int>& c: b)
       {
         newick::CheckNewick(c);
-        text+="  " + Newick().NewickToString(c);
+        text+="  " + newick::NewickToString(c);
       }
     }
     catch (std::exception& e)
@@ -327,7 +327,7 @@ void ribi::TestNewickVectorDialog::AnalyseSimplerNewicks() noexcept
 {
   typedef std::pair<std::vector<int>,int> NewickFrequencyPair;
   const std::vector<NewickFrequencyPair> simpler
-    = Newick().GetSimplerNewicksFrequencyPairs(m_newick->Peek());
+    = newick::GetSimplerNewicksFrequencyPairs(m_newick->Peek());
   std::string text = "Simpler Newicks:\n";
   for(const NewickFrequencyPair& simple_pair: simpler)
   {
@@ -337,7 +337,7 @@ void ribi::TestNewickVectorDialog::AnalyseSimplerNewicks() noexcept
     {
       newick::CheckNewick(simple);
       text+="  ";
-      text+=Newick().NewickToString(simple);
+      text+=newick::NewickToString(simple);
       text+=" (from f = ";
       text+=boost::lexical_cast<std::string>(f);
       text+=")\n";
@@ -365,7 +365,7 @@ void ribi::TestNewickVectorDialog::AutoCalculate() noexcept
 
   const BigInteger max_complexity
     = stringToBigInteger(m_max_complexity_str);
-  if (Newick().CalcComplexity(Newick().StringToNewick(m_newick_str))
+  if (newick::CalcComplexity(newick::StringToNewick(m_newick_str))
     > max_complexity)
   {
     m_text.push_back(
