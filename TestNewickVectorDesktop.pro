@@ -15,3 +15,12 @@ include(../TwoDigitNewick/TwoDigitNewick.pri)
 include(TestNewickVectorDesktop.pri)
 
 SOURCES += qtmain.cpp
+
+# QResources give this error
+QMAKE_CXXFLAGS += -Wno-unused-variable
+
+# Qt:
+# QtConcurrent::filterInternal(Sequence&, KeepFunctor, ReduceFunctor)’:
+# /usr/include/qt4/QtCore/qtconcurrentfilter.h:108:47: error: typedef ‘Iterator’ locally defined but not used [-Werror=unused-local-typedefs]
+# typedef typename Sequence::const_iterator Iterator;
+QMAKE_CXXFLAGS += -Wno-unused-local-typedefs
