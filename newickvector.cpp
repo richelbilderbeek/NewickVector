@@ -389,8 +389,8 @@ ribi::NewickVector ribi::NewickVector::TermIsNotOne(const int i) const
 // [*1]: Might be incorrect: algorithm holds for two numbers between brackets
 ribi::NewickVector ribi::NewickVector::TermIsOne(const int i) const
 {
-  const int sz = m_v.size();
-  assert(i < sz);
+  assert(i >= 0);
+  assert(i < static_cast<int>(m_v.size()));
   assert(!m_v.empty());
   assert(m_v[i] == 1); //Must be a 1
 
