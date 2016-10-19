@@ -69,6 +69,12 @@ struct TestNewickVectorDialog
     const std::vector<double>& coefficients
   ) const noexcept;
 
+  void AddCoefficientsCs(
+    std::vector<std::string>& v,
+    const std::vector<NewickFrequencyPair>& simpler,
+    const std::vector<double>& coefficients
+  ) const noexcept;
+
   void AddDerivedNewicks(
     std::vector<std::string>& v,
     const std::vector<NewickFrequencyPair>& simpler,

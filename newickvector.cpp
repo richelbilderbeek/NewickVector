@@ -49,15 +49,15 @@ along with this program.If not, see <http://www.gnu.org/licenses/>.
 ribi::NewickVector::NewickVector(const std::string& s)
   : m_v{Newick().StringToNewick(s)}
 {
-  assert(Newick().IsNewick(s));
+  assert(newick::IsNewick(s));
   //Can this be added?
-  //assert(m_v.empty() || Newick().IsNewick(m_v));
+  //assert(m_v.empty() || newick::IsNewick(m_v));
 }
 
 ribi::NewickVector::NewickVector(const std::vector<int>& v)
   : m_v{v}
 {
-  assert(m_v.empty() || Newick().IsNewick(m_v));
+  assert(m_v.empty() || newick::IsNewick(m_v));
 }
 
 BigInteger ribi::NewickVector::CalcComplexity() const
@@ -72,13 +72,13 @@ double ribi::NewickVector::CalcDenominator(const double theta) const
 
 BigInteger ribi::NewickVector::CalcNumOfCombinations() const
 {
-  assert(Newick().IsNewick(m_v));
+  assert(newick::IsNewick(m_v));
   return Newick().CalcNumOfCombinationsBinary(m_v);
 }
 
 BigInteger ribi::NewickVector::CalcNumOfSymmetries() const
 {
-  assert(Newick().IsNewick(m_v));
+  assert(newick::IsNewick(m_v));
   assert(Newick().IsBinaryNewick(m_v));
   return Newick().CalcNumOfSymmetriesBinary(m_v);
 }
@@ -87,7 +87,7 @@ double ribi::CalculateProbabilityNewickVector(
   const std::string& newick_str,
   const double theta)
 {
-  assert(Newick().IsNewick(newick_str));
+  assert(newick::IsNewick(newick_str));
   assert(theta > 0.0);
   NewickVector newick(newick_str);
   NewickStorage<NewickVector> storage(newick);
@@ -210,7 +210,7 @@ ribi::GetCoefficientNewickPairs(
 
 std::vector<ribi::NewickVector> ribi::NewickVector::GetSimplerNewicks() const
 {
-  assert(Newick().IsNewick(m_v));
+  assert(newick::IsNewick(m_v));
   const std::vector<std::vector<int> > v
     = Newick().GetSimplerBinaryNewicks(m_v);
   std::vector<NewickVector> w(std::begin(v),std::end(v));
@@ -219,7 +219,7 @@ std::vector<ribi::NewickVector> ribi::NewickVector::GetSimplerNewicks() const
 
 std::pair<ribi::NewickVector,ribi::NewickVector> ribi::NewickVector::GetRootBranches() const
 {
-  assert(Newick().IsNewick(m_v));
+  assert(newick::IsNewick(m_v));
   std::pair<std::vector<int>,std::vector<int> > p
     = Newick().GetRootBranchesBinary(m_v);
   return p;
@@ -429,7 +429,7 @@ int ribi::NewickVector::TermIsOneFindOtherValue(const int i) const
 
 std::string ribi::NewickVector::ToStr() const
 {
-  assert(Newick().IsNewick(m_v));
+  assert(newick::IsNewick(m_v));
   return Newick().NewickToString(m_v);
 }
 

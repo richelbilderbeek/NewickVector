@@ -56,10 +56,9 @@ ribi::TestNewickVectorDialog::TestNewickVectorDialog() noexcept
 }
 
 
-void ribi::TestNewickVectorDialog::AddCoefficients(
+void ribi::TestNewickVectorDialog::AddCoefficientsCs(
   std::vector<std::string>& v,
   const std::vector<NewickFrequencyPair>& simpler,
-  const std::vector<double>& probabilities,
   const std::vector<double>& coefficients
 ) const noexcept
 {
@@ -85,7 +84,18 @@ void ribi::TestNewickVectorDialog::AddCoefficients(
       + ")"
     );
   }
+}
+
+void ribi::TestNewickVectorDialog::AddCoefficients(
+  std::vector<std::string>& v,
+  const std::vector<NewickFrequencyPair>& simpler,
+  const std::vector<double>& probabilities,
+  const std::vector<double>& coefficients
+) const noexcept
+{
+  AddCoefficientsCs(v, simpler, coefficients);
   v.push_back("p(N,t) = SUM(c_i * p_i)");
+  const int n_simpler = boost::numeric_cast<int>(simpler.size());
   {
     for (int i=0; i!=n_simpler; ++i)
     {
@@ -300,7 +310,7 @@ void ribi::TestNewickVectorDialog::AnalyseRootBranches() noexcept
     {
       for(const std::vector<int>& c: b)
       {
-        Newick().CheckNewick(c);
+        newick::CheckNewick(c);
         text+="  " + Newick().NewickToString(c);
       }
     }
@@ -325,7 +335,7 @@ void ribi::TestNewickVectorDialog::AnalyseSimplerNewicks() noexcept
     const int f = simple_pair.second;
     try
     {
-      Newick().CheckNewick(simple);
+      newick::CheckNewick(simple);
       text+="  ";
       text+=Newick().NewickToString(simple);
       text+=" (from f = ";
@@ -393,13 +403,13 @@ bool ribi::TestNewickVectorDialog::CheckMaxComplexity() noexcept
 
 bool ribi::TestNewickVectorDialog::CheckNewick() noexcept
 {
-  if (!Newick().IsNewick(m_newick_str))
+  if (!newick::IsNewick(m_newick_str))
   {
     m_text.push_back("Valid Newick: No");
     //No Newick, why not?
     try
     {
-      Newick().CheckNewick(m_newick_str);
+      newick::CheckNewick(m_newick_str);
     }
     catch (std::exception& e)
     {
