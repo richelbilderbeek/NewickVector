@@ -93,57 +93,54 @@ void ribi::TestNewickVectorDialog::AddCoefficients(
   const std::vector<double>& coefficients
 ) const noexcept
 {
+  assert(simpler.size() == probabilities.size());
+  assert(probabilities.size() == coefficients.size());
+
   AddCoefficientsCs(v, simpler, coefficients);
   v.push_back("p(N,t) = SUM(c_i * p_i)");
+
   const int n_simpler = boost::numeric_cast<int>(simpler.size());
+  for (int i=0; i!=n_simpler; ++i)
   {
-    for (int i=0; i!=n_simpler; ++i)
-    {
-      std::string s = (i==0
-        ? "       =  "
-        : "         +");
-      s += " ( "
-        + boost::lexical_cast<std::string>(coefficients[i])
-        + " * "
-        + boost::lexical_cast<std::string>(probabilities[i])
-        + " )";
-      v.push_back(s);
-    }
-    //Hand-calculate probability
-    double p_by_hand = 0.0;
-    for (int i=0; i!=n_simpler; ++i)
-    {
-      p_by_hand += (coefficients[i] * probabilities[i]);
-    }
-    //p_by_hand/=m_denominator;
+    std::string s = (i==0
+      ? "       =  "
+      : "         +");
+    s += " ( "
+      + boost::lexical_cast<std::string>(coefficients[i])
+      + " * "
+      + boost::lexical_cast<std::string>(probabilities[i])
+      + " )";
+    v.push_back(s);
+  }
+  //Hand-calculate probability
+  const double p_by_hand = CalculateProbabilityByHand(coefficients, probabilities);
+  v.push_back(
+    "       = "
+    + boost::lexical_cast<std::string>(p_by_hand)
+    + " (hand-calculated)"
+  );
+  const double p_at_once = CalculateProbabilityNewickVector(m_newick->ToStr(),m_theta);
+  v.push_back(
+    std::string(ribi::fuzzy_equal_to()(p_by_hand,p_at_once)
+      ? "       = "
+      : "       != ")
+    + boost::lexical_cast<std::string>(p_at_once)
+    + " (calculated at once by NewickVector)"
+  );
+  if (m_compare
+    && (  newick::IsUnaryNewick(m_newick->Peek())
+       || newick::IsBinaryNewick(m_newick->Peek()) ) )
+  {
+    const double p_two_digit_newick{
+      CalculateProbabilityTwoDigitNewick(m_newick->ToStr(),m_theta)
+    };
     v.push_back(
-      "       = "
-      + boost::lexical_cast<std::string>(p_by_hand)
-      + " (hand-calculated)"
-    );
-    const double p_at_once = CalculateProbabilityNewickVector(m_newick->ToStr(),m_theta);
-    v.push_back(
-      std::string(ribi::fuzzy_equal_to()(p_by_hand,p_at_once)
+      std::string(ribi::fuzzy_equal_to()(p_two_digit_newick,p_at_once)
         ? "       = "
         : "       != ")
-      + boost::lexical_cast<std::string>(p_at_once)
-      + " (calculated at once by NewickVector)"
+      + boost::lexical_cast<std::string>(p_two_digit_newick)
+      + " (calculated at once by TwoDigitNewick)"
     );
-    if (m_compare
-      && (  newick::IsUnaryNewick(m_newick->Peek())
-         || newick::IsBinaryNewick(m_newick->Peek()) ) )
-    {
-      const double p_two_digit_newick{
-        CalculateProbabilityTwoDigitNewick(m_newick->ToStr(),m_theta)
-      };
-      v.push_back(
-        std::string(ribi::fuzzy_equal_to()(p_two_digit_newick,p_at_once)
-          ? "       = "
-          : "       != ")
-        + boost::lexical_cast<std::string>(p_two_digit_newick)
-        + " (calculated at once by TwoDigitNewick)"
-      );
-    }
   }
   v.push_back(std::string(80,'-'));
 }
@@ -385,6 +382,22 @@ void ribi::TestNewickVectorDialog::Calculate() noexcept
   Analyse();
 
 }
+
+double ribi::CalculateProbabilityByHand(
+  const std::vector<double>& probabilities,
+  const std::vector<double>& coefficients
+) noexcept
+{
+  assert(probabilities.size() == coefficients.size());
+  double p_by_hand = 0.0;
+  const int sz{static_cast<int>(probabilities.size())};
+  for (int i=0; i!=sz; ++i)
+  {
+    p_by_hand += (coefficients[i] * probabilities[i]);
+  }
+  return p_by_hand;
+}
+
 
 bool ribi::TestNewickVectorDialog::CheckMaxComplexity() noexcept
 {

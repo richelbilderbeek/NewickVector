@@ -95,6 +95,10 @@ struct TestNewickVectorDialog
   bool CheckTheta() noexcept;
 };
 
+double CalculateProbabilityByHand(
+  const std::vector<double>& probabilities,
+  const std::vector<double>& coefficients
+) noexcept;
 
 
 } //~namespace ribi
