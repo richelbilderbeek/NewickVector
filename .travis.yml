@@ -28,10 +28,10 @@ before_script:
 
 script: 
   - qmake TestNewickVectorConsole.pro
-  - make
+  - make debug
   - ./TestNewickVectorConsole "(2,(2,2))" 2.5
   - qmake TestNewickVectorDesktop.pro
-  - make
+  - make debug
   - ./get_code_cov.sh
   - codecov
   - ./do_oclint.sh
