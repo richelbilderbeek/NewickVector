@@ -16,6 +16,12 @@ include(TestNewickVectorDesktop.pri)
 
 SOURCES += qtmain.cpp
 
+# Debug and release mode
+CONFIG += console debug_and_release
+CONFIG(release, debug|release) {
+  DEFINES += NDEBUG
+}
+
 # QResources give this error
 QMAKE_CXXFLAGS += -Wno-unused-variable
 
