@@ -55,6 +55,29 @@ ribi::TestNewickVectorDialog::TestNewickVectorDialog() noexcept
 
 }
 
+void ribi::AddCoefficientsAndProbabilities(
+  std::vector<std::string>& v,
+  const std::vector<double>& coefficients,
+  const std::vector<double>& probabilities
+) noexcept
+{
+  assert(coefficients.size() == probabilities.size());
+  const int sz{static_cast<int>(coefficients.size())};
+  for (int i=0; i!=sz; ++i)
+  {
+    std::string s = (i==0
+      ? "       =  "
+      : "         +")
+    ;
+    s += " ( "
+      + boost::lexical_cast<std::string>(coefficients[i])
+      + " * "
+      + boost::lexical_cast<std::string>(probabilities[i])
+      + " )"
+    ;
+    v.push_back(s);
+  }
+}
 
 void ribi::TestNewickVectorDialog::AddCoefficientsCs(
   std::vector<std::string>& v,
@@ -99,19 +122,8 @@ void ribi::TestNewickVectorDialog::AddCoefficients(
   AddCoefficientsCs(v, simpler, coefficients);
   v.push_back("p(N,t) = SUM(c_i * p_i)");
 
-  const int n_simpler = boost::numeric_cast<int>(simpler.size());
-  for (int i=0; i!=n_simpler; ++i)
-  {
-    std::string s = (i==0
-      ? "       =  "
-      : "         +");
-    s += " ( "
-      + boost::lexical_cast<std::string>(coefficients[i])
-      + " * "
-      + boost::lexical_cast<std::string>(probabilities[i])
-      + " )";
-    v.push_back(s);
-  }
+  AddCoefficientsAndProbabilities(v, coefficients, probabilities);
+
   //Hand-calculate probability
   const double p_by_hand = CalculateProbabilityByHand(coefficients, probabilities);
   v.push_back(

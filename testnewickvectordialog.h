@@ -95,6 +95,12 @@ struct TestNewickVectorDialog
   bool CheckTheta() noexcept;
 };
 
+void AddCoefficientsAndProbabilities(
+  std::vector<std::string>& v,
+  const std::vector<double>& probabilities,
+  const std::vector<double>& coefficients
+) noexcept;
+
 double CalculateProbabilityByHand(
   const std::vector<double>& probabilities,
   const std::vector<double>& coefficients
